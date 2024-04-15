@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <link rel="stylesheet" href="input.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" &gt; />
+  <!-- tailwind css -->
+  <link href="./output.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="flex items-center justify-center h-screen">
+    <div class="w-[430px] bg-white border p-8 rounded shadow-md">
+      <h2 class="text-center text-[#333] mb-6 text-xl">Login</h2>
+      <form class="flex flex-col gap-4">
+        <div class="relative ">
+          <label for="username" class="absolute  left-[10px] bottom-[10px] "><i class="fas fa-user mr-2"></i>
+            Username</label>
+          <input class="w-full pl-[107px] p-2 border border-[#ccc] rounded-sm bg-white" type="text" id="username"
+            name="username" required />
+        </div>
+        <div class="relative ">
+          <label for="password" class="absolute left-[10px] bottom-[10px] "> <i class="fas fa-lock mr-2"></i>
+            Password</label>
+          <input class="w-full pl-[107px] p-2 border border-[#ccc] rounded-sm bg-white" type="password" id="password"
+            name="password" required />
+        </div>
+        <a class="bg-blue-500 gap-3 text-white flex items-center justify-center h-[40px] " href="dashboard.html ">Login
+          <i class="fas fa-sign-in-alt"></i></a>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+</html>
