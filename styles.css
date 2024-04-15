@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+}
+
+.login-main__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.login-container {
+    width: 430px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ 
+}
+
+h2 {
+    text-align: center;
+    color: #333; 
+    margin-bottom: 1em;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap:1em;
+}
+
+.form-group{
+    position: relative;
+    
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    margin-top: 1em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+}
+
+form a {
+    width: 25%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 auto;
+    text-align: center;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* DASHBOARD CSS */
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 100px 1fr 50px;
+    grid-template-areas:
+        'aside header'
+        'aside main'
+        'aside footer';
+    height: 100vh;
+}
+.header{
+    grid-area: header;
+    background-color: #0056b3;
+    color: white;
+    padding: 1em;
+}
+
+
+.header h1 {
+    text-align: center;
+}
+
+.header a {
+    background-color: red;
+    padding: .5em .7em;
+    border-radius: 3px;
+    text-decoration: none;
+    color: white;
+}
+
+.aside{
+    grid-area: aside;
+    background-color: #333;
+    color: white;
+}
+
+.aside h1 {
+    margin-bottom: .5em;
+   text-align: center;
+   padding-top: 1em;
+}
+
+.aside ul {
+    list-style: none;
+}
+
+.aside ul li {
+    padding:.8em 0;
+    padding-left: .8em;
+}
+
+.aside ul li:hover{
+    background-color: #ccc;
+    color: black;
+}
+
+.main{
+    grid-area: main;
+    text-align: center;
+    padding: 2em;
+}
+
+.main h1{
+    margin-bottom: .5em;
+}
+
+.footer{
+    grid-area: footer;
+    background-color: #333;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
