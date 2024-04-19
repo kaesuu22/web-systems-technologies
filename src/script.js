@@ -1,108 +1,197 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const registrationForm = document.getElementById("registerForm");
-  const registrationBody = document.getElementById("tableBody");
-  let originalUserID = 0; // to retain sa original userId  na mag delete/edit
+document.addEventListener("DOMContentLoaded", () => {
+  // PARA GET FORM AND TABLE NI SIYA
+  const createForm = document.getElementById("createForm");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const roleInput = document.getElementById("role");
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+  const userTable = document.getElementById("userTable");
 
-  registrationForm.addEventListener("submit", function (event) {
-      event.preventDefault();
+  // Form para sa submission event listener
+  createForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-      const userName = document.getElementById("nameInput");
-      const userEmail = document.getElementById("emailInput");
-      const userRole = document.getElementById("roleInput");
-      const userIDElements = document.querySelectorAll(".userID");
+    let isValid = true;
 
-      //error handling para sa input
-      if (userName.value === "") {
-          alert("Please enter your name");
-          return;
-      }
-      if (userEmail.value === "") {
-          alert("Please enter your email address.");
-          return;
-      } else if (
-          !userEmail.value.includes("@") ||
-          !userEmail.value.includes(".")
-      ) {
-          // email ga contain og @ og dot
-          alert("Please enter a valid email address.");
-          return;
-      } 
+    // para mag Validate sa name input
+    if (nameInput.value.trim() === "") {
+      nameInput.style.borderColor = "red";
+      nameInput.style.borderWidth = "2px";
+      nameError.classList.remove("hidden");
+      isValid = false;
+    } else {
+      nameInput.style.borderColor = "";
+      nameError.classList.add("hidden");
+    }
 
-      // mag get max nga userId sa each time na mag create account
-      let maxID = 0;
-      userIDElements.forEach((userIDElement) => {
-          const userID = parseInt(userIDElement.textContent.trim());
-          if (!isNaN(userID) && userID > maxID) {
-              maxID = userID;
-          }
-      });
-      // para sa add na part 
-      const nextID = maxID + 1;
+    // para mag Validate sa email input
+    if (emailInput.value.trim() === "") {
+      emailInput.style.borderColor = "red";
+      emailInput.style.borderWidth = "2px";
+      emailError.classList.remove("hidden");
+      isValid = false;
+    } else {
+      emailInput.style.borderColor = "";
+      emailError.classList.add("hidden");
+    }
 
-      //kung ang original userID is defaulted siya then 0, nextID gamiton
-      if (originalUserID == 0) {
-          appendValues(nextID, userName.value, userEmail.value, userRole.value);
-          userName.value = "";
-          userEmail.value = "";
-          return;
-          // kung ang original userId is na retain gikan  sa deleting orediting ang original userID gamiton
-      } else {
-          appendValues(
-              originalUserID,
-              userName.value,
-              userEmail.value,
-              userRole.value
-          );
-          userName.value = "";
-          userEmail.value = "";
-          originalUserID = 0;
-          return;
-      }
+    // If form inputs is valid, mag append siya og values sa table
+    if (isValid) {
+      appendValues();
+    }
   });
 
-  function appendValues(userID, userName, userEmail, userRole) {
-      const appendNewRow = document.createElement("tr");
-      appendNewRow.innerHTML =
-          '<td class="p-1 text-center border border-black userID">' +
-          userID +
-          "</td>" +
-          '<td class="p-1 border border-black user-Name">' +
-          userName +
-          "</td>" +
-          '<td class="p-1 border border-black user-Email">' +
-          userEmail +
-          "</td>" +
-          '<td class="p-1 border border-black user-Role">' +
-          userRole +
-          "</td>" +
-          '<td class="p-1 border border-black">' +
-          '<button class="editBtn"><i class="fa fa-edit" style="font-size:20px; color:blue"></i></button>' +
-          '<button class="deleteBtn"><i class="fa fa-trash-o p-1" style="font-size:18px;color:red"></i></button>' +
-          "</td>";
-      registrationBody.appendChild(appendNewRow);
+  // Function to append values to the table
+  const appendValues = () => {
+    // Setting the index to -1 in insertRow(-1) appends the new row at the end of the table.
+    const newRow = userTable.insertRow(-1);
 
-      const deleteButton = appendNewRow.querySelector(".deleteBtn");
-      deleteButton.addEventListener("click", function (event) {
-          originalUserID = getUserIdFromRow(this);
-          const rowToDelete = this.parentElement.parentElement;
-          registrationBody.removeChild(rowToDelete);
-      });
+    // Insert cells for ID, name, email, role, and actions
+    const idCell = newRow.insertCell(0);
+    const nameCell = newRow.insertCell(1);
+    const emailCell = newRow.insertCell(2);
+    const roleCell = newRow.insertCell(3);
+    const actionsCell = newRow.insertCell(4);
 
-      const editButton = appendNewRow.querySelector(".editBtn");
-      editButton.addEventListener("click", function (event) {
-          const row = this.closest("tr");
-          const userName = row.querySelector(".user-Name").textContent;
-          const userEmail = row.querySelector(".user-Email").textContent;
-          originalUserID = getUserIdFromRow(this);
-          document.getElementById("nameInput").value = userName;
-          document.getElementById("emailInput").value = userEmail;
-          registrationBody.removeChild(row);
-      });
-  }
+    // para sa Add classes to cells para  styling
+    newRow.classList.add("text-left");
+    idCell.classList.add("border", "p-2");
+    nameCell.classList.add("border", "p-2");
+    emailCell.classList.add("border", "p-2");
+    roleCell.classList.add("border", "p-2");
+    actionsCell.classList.add("border", "p-2");
 
-  function getUserIdFromRow(editButton) {
-      const row = editButton.closest("tr");
-      const userID = row.querySelector(".userID").textContent.trim();
-      return userID;
-  }
+    // Populate cells with input values
+    idCell.textContent = userTable.rows.length - 1; // id  length of total rows - 1
+    nameCell.textContent = nameInput.value;
+    emailCell.textContent = emailInput.value;
+    roleCell.textContent = roleInput.value;
+
+    // para  create siya  edit og delete buttons
+    const editButton = createEditButton();
+    const deleteButton = createDeleteButton();
+
+    // Attach event listeners to edit and delete buttons
+    editButton.addEventListener("click", () => handleEdit(newRow));
+    deleteButton.addEventListener("click", () => handleDelete(newRow));
+
+    // Append buttons to actions cell
+    actionsCell.appendChild(editButton);
+    actionsCell.appendChild(deleteButton);
+
+    // para Clear form fields sa  value after pag submission
+    nameInput.value = "";
+    emailInput.value = "";
+    roleInput.value = "Admin";
+  };
+
+  // Function para mag  create og edit button
+  const createEditButton = () => {
+    const editButton = document.createElement("button");
+    editButton.classList.add("text-blue-500", "px-1", "editButton");
+    editButton.innerHTML = '<i class="fas fa-edit"></i>';
+    return editButton;
+  };
+
+  // Function para mag  create og delete button
+  const createDeleteButton = () => {
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add("text-red-500", "px-2", "deleteButton");
+    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    return deleteButton;
+  };
+
+  // Function to handle edit button click
+  const handleEdit = (row) => {
+    const nameCell = row.cells[1];
+    const emailCell = row.cells[2];
+    const roleCell = row.cells[3];
+
+    let newName = prompt("Edit name:", nameCell.innerText.trim());
+    let newEmail = prompt("Edit email:", emailCell.innerText.trim());
+    let newRole = prompt("Edit role:", roleCell.innerText.trim());
+
+    // para email format validate
+    while (newEmail !== null && !isValidEmail(newEmail)) {
+      newEmail = prompt(
+        "Invalid email format. Please enter a valid email:",
+        newEmail
+      );
+    }
+
+    // para Role validation
+    while (newRole !== null && !isValidRole(newRole)) {
+      newRole = prompt(
+        "Invalid role. Please enter 'Admin' or 'User':",
+        newRole
+      );
+    }
+
+    // If e canceled sa any of the prompts, dli e update sa row
+    if (newName !== null && newEmail !== null && newRole !== null) {
+      nameCell.innerText = newName.trim();
+      emailCell.innerText = newEmail.trim();
+
+      const capitalizedRole =
+        newRole.charAt(0).toUpperCase() + newRole.slice(1).toLowerCase().trim();
+      roleCell.innerText = capitalizedRole;
+    }
+  };
+
+  // Function para  validate sa email format
+  const isValidEmail = (email) => {
+    // Regular expression for basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Function para sa  validate role
+  const isValidRole = (role) => {
+    return role.toLowerCase() === "admin" || role.toLowerCase() === "user";
+  };
+
+  // Function para mo handle sa delete button click
+  const handleDelete = (row) => {
+    // Show confirmation dialog
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this data?"
+    );
+
+    // para mag check sa user
+    if (confirmation) {
+      // If user clicks og 'Yes', ma delete ang row
+      row.parentNode.removeChild(row);
+    }
+  };
+
+  // Attach event listeners to default edit and delete buttons for each default row
+  const defaultEditButton1 = document
+    .getElementById("defaultRow1")
+    .querySelector(".editButton");
+  const defaultDeleteButton1 = document
+    .getElementById("defaultRow1")
+    .querySelector(".deleteButton");
+
+  const defaultEditButton2 = document
+    .getElementById("defaultRow2")
+    .querySelector(".editButton");
+  const defaultDeleteButton2 = document
+    .getElementById("defaultRow2")
+    .querySelector(".deleteButton");
+
+  defaultEditButton1.addEventListener("click", () =>
+    handleEdit(document.getElementById("defaultRow1"))
+  );
+  defaultDeleteButton1.addEventListener("click", () =>
+    handleDelete(document.getElementById("defaultRow1"))
+  );
+
+  defaultEditButton2.addEventListener("click", () =>
+    handleEdit(document.getElementById("defaultRow2"))
+  );
+  defaultDeleteButton2.addEventListener("click", () =>
+    handleDelete(document.getElementById("defaultRow2"))
+  );
 });
+
