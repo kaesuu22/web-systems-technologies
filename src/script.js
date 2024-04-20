@@ -36,18 +36,18 @@ document.addEventListener("DOMContentLoaded", () => {
       emailError.classList.add("hidden");
     }
 
-    // If form inputs is valid, mag append siya og values sa table
+    // If ang form inputs is valid, mag append siya og values sa table
     if (isValid) {
       appendValues();
     }
   });
 
-  // Function to append values to the table
+  // Function para append values sa table
   const appendValues = () => {
     // Setting the index to -1 in insertRow(-1) appends the new row at the end of the table.
     const newRow = userTable.insertRow(-1);
 
-    // Insert cells for ID, name, email, role, and actions
+    // Insert cells para sa ID, name, email, role, and actions
     const idCell = newRow.insertCell(0);
     const nameCell = newRow.insertCell(1);
     const emailCell = newRow.insertCell(2);
